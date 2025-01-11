@@ -77,3 +77,15 @@ pub async fn debug_trace_call(
         _ => Ok(None),
     }
 }
+
+pub fn extract_logs(call_frame: &CallFrame, logs: &mut Vec<CallLogFrame>) {
+    if let Some(ref logs_vec) = call_frame.logs {
+        logs.extend(logs_vec.iter().cloned());
+    }
+
+    if let Some(ref calls_vec) = call_frame.calls {
+        for call in calls_vec {
+            extract_logs(call, logs);
+        }
+    }
+}
